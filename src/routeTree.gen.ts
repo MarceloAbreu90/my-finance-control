@@ -13,6 +13,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as AppIndexRouteImport } from './routes/_app.index'
 import { Route as AppFinanceiroRouteImport } from './routes/_app.financeiro'
+import { Route as AppConfiguracoesRouteImport } from './routes/_app.configuracoes'
 import { Route as AppCategoriasRouteImport } from './routes/_app.categorias'
 import { Route as AppCartoesRouteImport } from './routes/_app.cartoes'
 
@@ -35,6 +36,11 @@ const AppFinanceiroRoute = AppFinanceiroRouteImport.update({
   path: '/financeiro',
   getParentRoute: () => AppRoute,
 } as any)
+const AppConfiguracoesRoute = AppConfiguracoesRouteImport.update({
+  id: '/configuracoes',
+  path: '/configuracoes',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppCategoriasRoute = AppCategoriasRouteImport.update({
   id: '/categorias',
   path: '/categorias',
@@ -51,12 +57,14 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/cartoes': typeof AppCartoesRoute
   '/categorias': typeof AppCategoriasRoute
+  '/configuracoes': typeof AppConfiguracoesRoute
   '/financeiro': typeof AppFinanceiroRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/cartoes': typeof AppCartoesRoute
   '/categorias': typeof AppCategoriasRoute
+  '/configuracoes': typeof AppConfiguracoesRoute
   '/financeiro': typeof AppFinanceiroRoute
   '/': typeof AppIndexRoute
 }
@@ -66,20 +74,34 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/_app/cartoes': typeof AppCartoesRoute
   '/_app/categorias': typeof AppCategoriasRoute
+  '/_app/configuracoes': typeof AppConfiguracoesRoute
   '/_app/financeiro': typeof AppFinanceiroRoute
   '/_app/': typeof AppIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/cartoes' | '/categorias' | '/financeiro'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/cartoes'
+    | '/categorias'
+    | '/configuracoes'
+    | '/financeiro'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/cartoes' | '/categorias' | '/financeiro' | '/'
+  to:
+    | '/login'
+    | '/cartoes'
+    | '/categorias'
+    | '/configuracoes'
+    | '/financeiro'
+    | '/'
   id:
     | '__root__'
     | '/_app'
     | '/login'
     | '/_app/cartoes'
     | '/_app/categorias'
+    | '/_app/configuracoes'
     | '/_app/financeiro'
     | '/_app/'
   fileRoutesById: FileRoutesById
@@ -119,6 +141,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppFinanceiroRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/configuracoes': {
+      id: '/_app/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/configuracoes'
+      preLoaderRoute: typeof AppConfiguracoesRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/categorias': {
       id: '/_app/categorias'
       path: '/categorias'
@@ -139,6 +168,7 @@ declare module '@tanstack/react-router' {
 interface AppRouteChildren {
   AppCartoesRoute: typeof AppCartoesRoute
   AppCategoriasRoute: typeof AppCategoriasRoute
+  AppConfiguracoesRoute: typeof AppConfiguracoesRoute
   AppFinanceiroRoute: typeof AppFinanceiroRoute
   AppIndexRoute: typeof AppIndexRoute
 }
@@ -146,6 +176,7 @@ interface AppRouteChildren {
 const AppRouteChildren: AppRouteChildren = {
   AppCartoesRoute: AppCartoesRoute,
   AppCategoriasRoute: AppCategoriasRoute,
+  AppConfiguracoesRoute: AppConfiguracoesRoute,
   AppFinanceiroRoute: AppFinanceiroRoute,
   AppIndexRoute: AppIndexRoute,
 }
