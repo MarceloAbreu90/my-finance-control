@@ -393,7 +393,11 @@ function ReceitaDialog({
       toast.error("Preencha descrição, valor e categoria.");
       return;
     }
-    if (isNew) await api.createReceita({ ...form, id: undefined as never });
+    if (isNew) {
+      const { id: _ignore, ...payload } = form;
+      void _ignore;
+      await api.createReceita(payload);
+    }
     else await api.updateReceita(form.id, form);
     toast.success(isNew ? "Receita criada" : "Receita atualizada");
     onSaved();
@@ -485,10 +489,11 @@ function DespesaDialog({
       return;
     }
     if (isNew) {
+      const { id: _ignore, ...payload } = form;
+      void _ignore;
       await api.createDespesa({
-        ...form,
+        ...payload,
         parcelas: form.formaPagamento === "credito" ? parcelas : 1,
-        id: undefined as never,
       });
     } else {
       await api.updateDespesa(form.id, form);
