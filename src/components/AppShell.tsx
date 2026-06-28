@@ -13,13 +13,20 @@ import { useAuth } from "@/lib/auth";
 import { GlobalSearch } from "./GlobalSearch";
 import { Button } from "@/components/ui/button";
 
-const nav = [
+type NavItem = {
+  to: string;
+  label: string;
+  icon: typeof LayoutDashboard;
+  exact?: boolean;
+};
+
+const nav: NavItem[] = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { to: "/financeiro", label: "Financeiro", icon: Wallet },
   { to: "/cartoes", label: "Cartões", icon: CreditCard },
   { to: "/categorias", label: "Categorias", icon: Tags },
-  { to: "/configuracoes", label: "Configurações", icon: Settings },
-] as const;
+  { to: "/configuracoes", label: "Config", icon: Settings },
+];
 
 export function AppShell() {
   const { user, logout } = useAuth();
