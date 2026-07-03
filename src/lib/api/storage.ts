@@ -15,22 +15,25 @@ export const uid = () =>
   (crypto as Crypto & { randomUUID?: () => string }).randomUUID?.() ??
   Math.random().toString(36).slice(2) + Date.now().toString(36);
 
-const defaultCategorias: Categoria[] = [
-  { id: uid(), nome: "Salário", tipo: "receita", padrao: true, cor: "#16a34a" },
-  { id: uid(), nome: "Freelance", tipo: "receita", padrao: true, cor: "#22c55e" },
-  { id: uid(), nome: "Investimentos", tipo: "receita", padrao: true, cor: "#14b8a6" },
-  { id: uid(), nome: "Alimentação", tipo: "despesa", padrao: true, cor: "#ef4444" },
-  { id: uid(), nome: "Moradia", tipo: "despesa", padrao: true, cor: "#f97316" },
-  { id: uid(), nome: "Transporte", tipo: "despesa", padrao: true, cor: "#eab308" },
-  { id: uid(), nome: "Saúde", tipo: "despesa", padrao: true, cor: "#06b6d4" },
-  { id: uid(), nome: "Lazer", tipo: "despesa", padrao: true, cor: "#8b5cf6" },
-  { id: uid(), nome: "Educação", tipo: "despesa", padrao: true, cor: "#3b82f6" },
+// NOTE: never call uid() at module scope — Cloudflare Workers disallow
+// crypto.randomUUID() (and other random/async APIs) during global evaluation.
+// Build seed data lazily inside seed().
+const defaultCategoriaSeeds: Omit<Categoria, "id">[] = [
+  { nome: "Salário", tipo: "receita", padrao: true, cor: "#16a34a" },
+  { nome: "Freelance", tipo: "receita", padrao: true, cor: "#22c55e" },
+  { nome: "Investimentos", tipo: "receita", padrao: true, cor: "#14b8a6" },
+  { nome: "Alimentação", tipo: "despesa", padrao: true, cor: "#ef4444" },
+  { nome: "Moradia", tipo: "despesa", padrao: true, cor: "#f97316" },
+  { nome: "Transporte", tipo: "despesa", padrao: true, cor: "#eab308" },
+  { nome: "Saúde", tipo: "despesa", padrao: true, cor: "#06b6d4" },
+  { nome: "Lazer", tipo: "despesa", padrao: true, cor: "#8b5cf6" },
+  { nome: "Educação", tipo: "despesa", padrao: true, cor: "#3b82f6" },
 ];
 
 const seed = (): DB => ({
   usuario: { id: uid(), email: "demo@finance.app", nome: "Usuário Demo" },
   senhaHash: "demo1234",
-  categorias: defaultCategorias,
+  categorias: defaultCategoriaSeeds.map((c) => ({ ...c, id: uid() })),
   receitas: [],
   despesas: [],
   cartoes: [],
