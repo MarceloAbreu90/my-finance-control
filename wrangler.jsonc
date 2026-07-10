@@ -1,0 +1,12 @@
+{
+  "name": "my-finance-control",
+  "compatibility_date": "2026-07-02",
+  "compatibility_flags": ["nodejs_compat"],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "my-finance-control",
+      "database_id": "27d53441-d244-4f36-b0f3-1c293dc96f49"
+    }
+  ]
+}
