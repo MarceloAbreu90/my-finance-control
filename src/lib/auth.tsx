@@ -10,32 +10,28 @@ interface AuthState {
 }
 
 const Ctx = createContext<AuthState | null>(null);
-const KEY = "mfc:session";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<Usuario | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(KEY) || sessionStorage.getItem(KEY);
-      if (raw) setUser(JSON.parse(raw) as Usuario);
-    } catch {
-      // ignore
-    }
-    setLoading(false);
+    // Fonte da verdade agora é o cookie de sessão httpOnly no servidor —
+    // consultamos /me para saber se já existe uma sessão válida.
+    api
+      .me()
+      .then(setUser)
+      .catch(() => setUser(null))
+      .finally(() => setLoading(false));
   }, []);
 
   const login = useCallback(async (email: string, senha: string, remember: boolean) => {
-    const u = await api.login(email, senha);
+    const u = await api.login(email, senha, remember);
     setUser(u);
-    (remember ? localStorage : sessionStorage).setItem(KEY, JSON.stringify(u));
   }, []);
 
   const logout = useCallback(() => {
-    localStorage.removeItem(KEY);
-    sessionStorage.removeItem(KEY);
-    setUser(null);
+    api.logout().finally(() => setUser(null));
   }, []);
 
   const value = useMemo(() => ({ user, loading, login, logout }), [user, loading, login, logout]);
